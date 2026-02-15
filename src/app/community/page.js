@@ -1,7 +1,60 @@
-import React from 'react'
+'use client'
+
+import React, { useState, useEffect } from 'react'
 import styles from './page.module.css'
 
 const CommunityPage = () => {
+    const [currentSlide, setCurrentSlide] = useState(0);
+
+    const bannerSlides = [
+        {
+            id: 1,
+            title: 'Share Your Culinary Creations',
+            description: 'Connect with food lovers and showcase your best recipes',
+            emoji: '🍳',
+            bgColor: '#FFD97D'
+        },
+        {
+            id: 2,
+            title: 'Learn from Expert Chefs',
+            description: 'Discover cooking tips and techniques from experienced foodies',
+            emoji: '👨‍🍳',
+            bgColor: '#FFB3BA'
+        },
+        {
+            id: 3,
+            title: 'Explore Global Cuisines',
+            description: 'Taste flavors from around the world through our community',
+            emoji: '🌍',
+            bgColor: '#BAE1FF'
+        },
+        {
+            id: 4,
+            title: 'Build Your Food Network',
+            description: 'Join thousands of passionate food enthusiasts today',
+            emoji: '🤝',
+            bgColor: '#BAFFC9'
+        }
+    ];
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentSlide((prev) => (prev + 1) % bannerSlides.length);
+        }, 5000);
+        return () => clearInterval(timer);
+    }, [bannerSlides.length]);
+
+    const nextSlide = () => {
+        setCurrentSlide((prev) => (prev + 1) % bannerSlides.length);
+    };
+
+    const prevSlide = () => {
+        setCurrentSlide((prev) => (prev - 1 + bannerSlides.length) % bannerSlides.length);
+    };
+
+    const goToSlide = (index) => {
+        setCurrentSlide(index);
+    };
     const communityMembers = [
         {
             id: 1,
@@ -82,10 +135,41 @@ const CommunityPage = () => {
 
     return (
         <div className={styles.container}>
-            <section className={styles.hero}>
-                <h1>🍽️ Foodies Community</h1>
-                <p>Join thousands of food enthusiasts sharing recipes, tips, and culinary adventures</p>
-                <button className={styles.ctaButton}>Join Now</button>
+            <section className={styles.heroSlideshow}>
+                <div className={styles.slidesWrapper}>
+                    {bannerSlides.map((slide, index) => (
+                        <div
+                            key={slide.id}
+                            className={`${styles.slide} ${index === currentSlide ? styles.active : ''}`}
+                            style={{ backgroundColor: slide.bgColor }}
+                        >
+                            <div className={styles.slideContent}>
+                                <span className={styles.slideEmoji}>{slide.emoji}</span>
+                                <h1>{slide.title}</h1>
+                                <p>{slide.description}</p>
+                                <button className={styles.ctaButton}>Join Now</button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                <button className={styles.prevButton} onClick={prevSlide} aria-label="Previous slide">
+                    ❮
+                </button>
+                <button className={styles.nextButton} onClick={nextSlide} aria-label="Next slide">
+                    ❯
+                </button>
+
+                <div className={styles.dotsContainer}>
+                    {bannerSlides.map((_, index) => (
+                        <button
+                            key={index}
+                            className={`${styles.dot} ${index === currentSlide ? styles.activeDot : ''}`}
+                            onClick={() => goToSlide(index)}
+                            aria-label={`Go to slide ${index + 1}`}
+                        />
+                    ))}
+                </div>
             </section>
 
             <section className={styles.statsSection}>

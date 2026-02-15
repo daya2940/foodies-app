@@ -1,8 +1,11 @@
 import React from 'react'
+import MealsPage from './page'
 
 const Mealslayout = ({ children }) => {
   return (
-    <div>Mealslayout</div>
+    <div>
+      <MealsPage/>
+    </div>
   )
 }
 
